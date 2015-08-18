@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 packagelist.txt"
+    exit 2
+fi
+
+load_packages() {
+    echo "Clearing dpkg database of already selected stuffs"
+    dpkg --clear-selections
+
+    echo "Setting your selections in dpkg database"
+    dpkg --set-selections < "$0"
+}
+
+install_packages() {
+    echo "Installing required packages"
+    apt-get update
+    apt-get dist-upgrade
+}
+
+load_packages $0
+install_packages
